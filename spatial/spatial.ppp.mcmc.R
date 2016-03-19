@@ -10,7 +10,7 @@
 # Last updated: 19 MAR 2016
 #
 # Model statement:
-#	s(t) ~ exp(x(s(t))%*%beta)/\int(exp(x(s)%*%beta)ds)
+#	s_i ~ exp(x(s_i)%*%beta)/\int(exp(x(s)%*%beta)ds)
 #	beta ~ N(0,sigma.beta^2*I)
 #
 # Reference:
@@ -61,8 +61,6 @@ spatial.ppp.mcmc <- function(s,S,priors,start,tune,adapt=TRUE,n.mcmc=1000){
 	
 	beta <- start$beta
 	int <- log(sum(exp(X%*%beta)))  # normalizing constant in denominator of ppp likelihood
-
-	lambda <- exp(X%*%beta)  # intensity of Poisson process
 
 	mu.beta <- rep(0,qX)  # mean of normal prior on beta
 	sigma.beta <- priors$sigma.beta
