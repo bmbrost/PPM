@@ -17,10 +17,9 @@ library(rgeos)
 library(raster)
 # library(data.table)
 
-get.cell.count <- function(s,g,S){  # tabulate number of locations s per grid cell in S
+get.cell.count <- function(s,S){  # tabulate number of locations s per grid cell in S
 	# browser()
 	idx <- extract(S,s,cellnumbers=TRUE)[,1]  # cell idx
-	
 	tab <- data.frame(table(idx))
 	tab$cell.idx <- as.numeric(levels(tab$idx))[tab$idx]
 	z <- numeric(ncell(S))
@@ -83,8 +82,6 @@ plot(t(beta))
 J <- 10  # number of animals
 X <- cbind(1,scale(values(S)))  # design matrix
 n <- 500  # number of proposed locations
-
-summary(exp(X%*%beta[,10]))
 
 s <- matrix(ncol=2)  # animal locations
 g <- numeric()  # grouping variable
