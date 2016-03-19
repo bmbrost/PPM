@@ -1,6 +1,6 @@
-### Simulate locations from multiple animals and environmental covariates
-### for the purposes of examining resource selection. Model
-### fitting proceeds using a Poisson GLMM
+### Simulate a spatial, inhomogenous Poisson process for 
+### multiple groups (e.g., animals) and fit model using a 
+### Poisson GLMM and Poisson point process mixed model
 
 rm(list=ls())
 
@@ -55,6 +55,7 @@ plot(S)
 S <- disaggregate(S,fact=2,method="bilinear")
 plot(S)
 
+values(S) <- scale(values(S))
 
 ##########################################################
 ### Population-level process model parameters
@@ -71,6 +72,7 @@ Sigma[1,2] <- Sigma[2,1] <- Sigma[1,1]*Sigma[2,2]*rho
 ### Simulate group-level process model parameters
 ##########################################################
 
+J <- 10  # number of animals
 beta <- t(rmvnorm(J,mu.beta,Sigma))  # betas for each group
 plot(t(beta))
 
@@ -79,11 +81,11 @@ plot(t(beta))
 ### Simulate animal locations
 ##########################################################
 
-J <- 10  # number of animals
-X <- cbind(1,scale(values(S)))  # design matrix
+
+X <- cbind(1,values(S))  # design matrix
 n <- 500  # number of proposed locations
 
-s <- matrix(ncol=2)  # animal locations
+s <- matrix(,nrow=0,ncol=2)  # animal locations
 g <- numeric()  # grouping variable
 
 for(i in 1:J){  # loop through animals
@@ -93,15 +95,35 @@ for(i in 1:J){  # loop through animals
 	s <- rbind(s,xyFromCell(S,idx[keep==1]))  # USED LOCATIONS
 	g <- c(g,rep(i,sum(keep)))
 }
-s <- s[-1,]
 
 plot(S)
 points(s)
 table(g)
 
+##########################################################
+### Fit model via Poisson point process model
+##########################################################
+
+source('~/Documents/git/PPM/spatial/spatial.ppp.mixed.mcmc.R')
+priors <- list(sigma.beta=5,S0=diag(qX),nu=qX+1)
+tune <- list(beta=rep(2,J))
+start <- list(beta=matrix(0,qX,J),mu.beta=mu.beta,Sigma=Sigma)
+out1 <- spatial.ppp.mixed.mcmc(s,S,g,priors,start,tune,n.mcmc=5000)
+
+# Examine estimates for beta_j
+g.idx <- 8  # group idx for plotting beta_j
+matplot(out1$beta[,,g.idx],type="l",lty=1);abline(h=beta[,g.idx],col=1:qX,lty=2)
+
+# Examine estimates for mu.beta
+matplot(out1$mu.beta,type="l");abline(h=mu.beta,col=1:qX,lty=2)
+
+# Examine estimates for Lambda
+matplot(cbind(out1$Sigma[1,1,],out1$Sigma[1,2,]),type="l")
+abline(h=c(Sigma[1,1],Sigma[1,2]),lty=2,col=1:qX)
+
 
 ##########################################################
-### Fit model
+### Fit model via Poisson GLMM
 ##########################################################
 
 source('~/Documents/git/GLMM/poisson.glmm.mcmc.R')
@@ -112,15 +134,15 @@ X.tmp <- do.call("rbind",rep(list(X),J))
 priors <- list(sigma.beta=5,S0=diag(qX),nu=qX+1)
 tune <- list(beta=rep(2.0,J))
 start <- list(beta=matrix(0,qX,J),mu.beta=mu.beta,Sigma=Sigma)
-out1 <- poisson.glmm.mcmc(z,X.tmp,g.tmp,priors,start,tune,adapt=TRUE,n.mcmc=10000)
+out2 <- poisson.glmm.mcmc(z,X.tmp,g.tmp,priors,start,tune,adapt=TRUE,n.mcmc=5000)
 
 # Examine estimates for beta_j
-g.idx <- 10  # group idx for plotting beta_j
-matplot(out1$beta[,,g.idx],type="l",lty=1);abline(h=beta[,g.idx],col=1:qX,lty=2)
+g.idx <- 1  # group idx for plotting beta_j
+matplot(out2$beta[,,g.idx],type="l",lty=1);abline(h=beta[,g.idx],col=1:qX,lty=2)
 
 # Examine estimates for mu.beta
-matplot(out1$mu.beta,type="l");abline(h=mu.beta,col=1:qX,lty=2)
+matplot(out2$mu.beta,type="l");abline(h=mu.beta,col=1:qX,lty=2)
 
 # Examine estimates for Lambda
-matplot(cbind(out1$Sigma[1,1,],out1$Sigma[1,2,]),type="l")
+matplot(cbind(out2$Sigma[1,1,],out2$Sigma[1,2,]),type="l")
 abline(h=c(Sigma[1,1],Sigma[1,2]),lty=2,col=1:qX)
