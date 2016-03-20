@@ -1,6 +1,7 @@
-### Simulate a spatial, inhomogenous Poisson process for 
-### multiple groups (e.g., animals) and fit model using a 
-### Poisson GLMM and Poisson point process mixed model
+### Simulate a spatial, inhomogenous Poisson point process within
+### groups (e.g., animals) and fit model using a 
+### Poisson GLMM and Poisson point process model with varying
+### coefficients
 
 rm(list=ls())
 
@@ -104,11 +105,11 @@ table(g)
 ### Fit model via Poisson point process model
 ##########################################################
 
-source('~/Documents/git/PPM/spatial/spatial.ppp.mixed.mcmc.R')
+source('~/Documents/git/PPM/spatial/spatial.ppp.varying.coef.mcmc.R')
 priors <- list(sigma.beta=5,S0=diag(qX),nu=qX+1)
 tune <- list(beta=rep(2,J))
 start <- list(beta=matrix(0,qX,J),mu.beta=mu.beta,Sigma=Sigma)
-out1 <- spatial.ppp.mixed.mcmc(s,S,g,priors,start,tune,n.mcmc=5000)
+out1 <- spatial.ppp.varying.coef.mcmc(s,S,g,priors,start,tune,n.mcmc=5000)
 
 # Examine estimates for beta_j
 g.idx <- 8  # group idx for plotting beta_j
@@ -126,7 +127,7 @@ abline(h=c(Sigma[1,1],Sigma[1,2]),lty=2,col=1:qX)
 ### Fit model via Poisson GLMM
 ##########################################################
 
-source('~/Documents/git/GLMM/poisson.glmm.mcmc.R')
+source('~/Documents/git/Multilevel/nested/poisson/poisson.varying.coef.mcmc.R')
 
 z <- c(sapply(1:J,function(x) get.cell.count(s[g==x,],S)))
 g.tmp <- rep(1:J,each=ncell(S))
@@ -134,10 +135,10 @@ X.tmp <- do.call("rbind",rep(list(X),J))
 priors <- list(sigma.beta=5,S0=diag(qX),nu=qX+1)
 tune <- list(beta=rep(2.0,J))
 start <- list(beta=matrix(0,qX,J),mu.beta=mu.beta,Sigma=Sigma)
-out2 <- poisson.glmm.mcmc(z,X.tmp,g.tmp,priors,start,tune,adapt=TRUE,n.mcmc=5000)
+out2 <- poisson.varying.coef.mcmc(z,X.tmp,g.tmp,priors,start,tune,adapt=TRUE,n.mcmc=5000)
 
 # Examine estimates for beta_j
-g.idx <- 1  # group idx for plotting beta_j
+g.idx <- 2  # group idx for plotting beta_j
 matplot(out2$beta[,,g.idx],type="l",lty=1);abline(h=beta[,g.idx],col=1:qX,lty=2)
 
 # Examine estimates for mu.beta

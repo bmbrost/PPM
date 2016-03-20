@@ -1,8 +1,8 @@
 #
 #
-# Bayesian spatial, inhomogenous Poisson point process model
+# Bayesian spatial, inhomogenous Poisson point process model for grouped data
 #
-# Function name: spatial.ppp.mixed.mcmc
+# Function name: spatial.ppp.varying.coef.mcmc
 #
 # Author: Brian M. Brost
 # Contact: bmbrost@gmail.com
@@ -26,15 +26,9 @@
 # S - rasterized spatial support of the point process with values 
 #	corresponding to the covariates for which inference is desired. A
 #	raster stack is used for multiple covariates, with one raster layer
-# 	per covariate.
-
-
-# z - vector of length n containing the count of observations corresponding to 
-# 	each row in the design matrix X. Note that the value of z[1] corresponds to
-#	X[1,], z[2] corresponds to X[2,], etc.
-# X - design matrix of dimension n x qX containing covariates (plus
-#	intercept) for which inference is desired
-# g - variable that defines groups of observations in z
+# 	per covariate. Note that the support is identical for observations 
+#	in all groups.
+# g - vector of length T that indicates the grouping structure in s.
 # priors - list of priors containing the following elements:
 #	1. sigma.beta - Standard deviation of normal prior on beta
 # start - list of starting values containing the following elements:
@@ -46,7 +40,7 @@
 #
 #
 
-spatial.ppp.mixed.mcmc <- function(s,S,g,priors,start,tune,adapt=TRUE,n.mcmc=1000){
+spatial.ppp.varying.coef.mcmc <- function(s,S,g,priors,start,tune,adapt=TRUE,n.mcmc=1000){
 
 	###
 	###  Libraries and Subroutines

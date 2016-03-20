@@ -128,9 +128,9 @@ Implementation
 \end_layout
 
 \begin_layout Standard
-The file spatial.ppp.mixed.sim.R simulates data according to the model statement
- presented below, and spatial.ppp.mixed.mcmc.R contains the MCMC algorithm for
- model fitting.
+The file spatial.ppp.varying.coef.sim.R simulates data according to the model
+ statement presented below, and spatial.ppp.varying.coef.mcmc.R contains the
+ MCMC algorithm for model fitting.
  
 \end_layout
 
@@ -224,7 +224,7 @@ Regression coefficients (
 \noindent
 \begin_inset Formula 
 \begin{eqnarray*}
-\left[\boldsymbol{\beta}_{j}\mid\cdot\right] & \propto & \prod_{t\in{\cal T}}\left[\mathbf{s}_{j}\left(t\right)\mid\mathbf{x}_{j}\left(t\right)^{\prime}\boldsymbol{\beta}_{j}\right]\left[\boldsymbol{\beta}_{j}\mid\boldsymbol{\mu}_{\beta},\boldsymbol{\Sigma}\right]\\
+\left[\boldsymbol{\beta}_{j}\mid\cdot\right] & \propto & \prod_{t\in{\cal T}}\left[\mathbf{s}_{j}\left(t\right)\mid\boldsymbol{\beta}_{j}\right]\left[\boldsymbol{\beta}_{j}\mid\boldsymbol{\mu}_{\beta},\boldsymbol{\Sigma}\right]\\
  & \propto & \prod_{t\in{\cal T}}\left(\frac{\exp\left(\mathbf{x}\left(\mathbf{s}_{j}\left(t\right)\right)^{\prime}\boldsymbol{\beta}_{j}\right)}{\int\exp\left(\mathbf{x}\left(\mathbf{s}\right)^{\prime}\boldsymbol{\beta}_{j}\right)d\mathbf{s}}\right){\cal N}\left(\boldsymbol{\beta}_{j}\mid\mathbf{\boldsymbol{\mu}_{\beta}},\boldsymbol{\Sigma}\right).
 \end{eqnarray*}
 
