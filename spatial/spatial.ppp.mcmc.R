@@ -1,8 +1,8 @@
 #
 #
-# Bayesian spatial inhomegenous Poisson point process model
+# Bayesian spatial, inhomogenous Poisson point process model
 #
-# Function name: spatial.ppp.MCMC
+# Function name: spatial.ppp.mcmc
 #
 # Author: Brian M. Brost
 # Contact: bmbrost@gmail.com
