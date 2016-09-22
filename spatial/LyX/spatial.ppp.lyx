@@ -79,7 +79,19 @@
 
 \shape smallcaps
 \size larger
-Spatial, Inhomogenous Poisson Point Process Model
+Inhomogeneous Poisson Point Process Model
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+
+\shape smallcaps
+\size larger
+\begin_inset VSpace 0.05cm
+\end_inset
+
+for 2-Dimensional (Spatial) Data
 \end_layout
 
 \begin_layout Standard
@@ -111,7 +123,7 @@ Description
 \end_layout
 
 \begin_layout Standard
-A inhomogenous Poisson point process model for spatial locations.
+An inhomogeneous Poisson point process model for spatial locations.
 \end_layout
 
 \begin_layout Subsubsection*

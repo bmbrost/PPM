@@ -79,7 +79,19 @@
 
 \shape smallcaps
 \size larger
-Spatial, Inhomogenous Poisson Point Process Model
+Inhomogenous Poisson Point Process Model
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+
+\shape smallcaps
+\size larger
+\begin_inset VSpace 0.05cm
+\end_inset
+
+for 2-Dimensional (Spatial) Data
 \end_layout
 
 \begin_layout Standard
@@ -111,7 +123,7 @@ Description
 \end_layout
 
 \begin_layout Standard
-A inhomogenous Poisson point process model for spatial locations.
+An inhomogenous Poisson point process model for spatial locations.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -131,24 +143,20 @@ Model statement
 
 \begin_layout Standard
 Let 
-\begin_inset Formula $z_{i}$
+\begin_inset Formula $\mathbf{s}\left(t\right)=\left(s_{x}\left(t\right),s_{y}\left(t\right)\right)^{\prime}$
 \end_inset
 
 , for 
-\begin_inset Formula $i=1,\ldots,n$
+\begin_inset Formula $t\in{\cal T}$
 \end_inset
 
-, be observed count data (i.e., 
-\begin_inset Formula $z_{i}$
-\end_inset
-
- are integers greater than or equal to 0).
+, be observed spatial locations.
  Also let 
-\begin_inset Formula $\mathbf{x}_{i}$
+\begin_inset Formula $\mathbf{x}\left(\mathbf{s}\left(t\right)\right)$
 \end_inset
 
- be a vector of covariates associated with 
-\begin_inset Formula $z_{i}$
+ be a vector of covariates associated with the location 
+\begin_inset Formula $\mathbf{s}\left(t\right)$
 \end_inset
 
  for which inference is desired, and the vector 
@@ -158,8 +166,7 @@ Let
  be the corresponding coefficients.
 \begin_inset Formula 
 \begin{eqnarray*}
-z_{i} & \sim & \text{Pois}\left(\lambda_{i}\right)\\
-\log\left(\lambda_{i}\right) & = & \mathbf{x}_{i}^{\prime}\boldsymbol{\beta}\\
+\mathbf{s}\left(t\right) & \sim & \frac{\exp\left(\mathbf{x}\left(\mathbf{s}\left(t\right)\right)^{\prime}\boldsymbol{\beta}\right)}{\int\exp\left(\mathbf{x}\left(\mathbf{s}\right)^{\prime}\boldsymbol{\beta}\right)d\mathbf{s}}\\
 \boldsymbol{\beta} & \sim & {\cal N}(\mathbf{0},\sigma_{\beta}^{2}\mathbf{I})
 \end{eqnarray*}
 
@@ -185,8 +192,8 @@ Regression coefficients (
 
 \begin_inset Formula 
 \begin{eqnarray*}
-[\boldsymbol{\beta}|\cdot] & \propto & \prod_{i=1}^{n}\left[z_{i}|\boldsymbol{\beta}\right]\left[\boldsymbol{\beta}\right]\\
- & \propto & \prod_{i=1}^{n}\text{Pois}(z_{i}\mid\mathbf{x}_{i}^{\prime}\boldsymbol{\beta}){\cal N}(\boldsymbol{\beta}|\mathbf{0},\sigma_{\beta}^{2}\mathbf{I}).
+[\boldsymbol{\beta}|\cdot] & \propto & \prod_{t\in{\cal T}}\left[\mathbf{s}\left(t\right)|\boldsymbol{\beta}\right]\left[\boldsymbol{\beta}\right]\\
+ & \propto & \prod_{t\in{\cal T}}\left(\frac{\exp\left(\mathbf{x}\left(\mathbf{s}\left(t\right)\right)^{\prime}\boldsymbol{\beta}\right)}{\int\exp\left(\mathbf{x}\left(\mathbf{s}\right)^{\prime}\boldsymbol{\beta}\right)d\mathbf{s}}\right){\cal N}(\boldsymbol{\beta}|\mathbf{0},\sigma_{\beta}^{2}\mathbf{I}).
 \end{eqnarray*}
 
 \end_inset

@@ -1,6 +1,6 @@
 #
 #
-# Bayesian spatial, inhomogenous Poisson point process model
+# Bayesian inhomogenous Poisson point process model for spatial data
 #
 # Function name: spatial.ppp.mcmc
 #
@@ -70,6 +70,7 @@ spatial.ppp.mcmc <- function(s,S,priors,start,tune,adapt=TRUE,n.mcmc=1000){
 	# Sigma.beta <- c*Sigma.beta  # variance-covariance matrix of
 		# # normal prior on beta
 
+
 	###
 	### Create receptacles for output
 	###
@@ -79,6 +80,7 @@ spatial.ppp.mcmc <- function(s,S,priors,start,tune,adapt=TRUE,n.mcmc=1000){
 	keep <- list(beta=0)
 	keep.tmp <- keep  # track MH accpetance rate for adaptive tuning
 	Tb <- 50  # frequency of adaptive tuning
+
 
 	###
 	###  Begin MCMC loop
@@ -94,20 +96,24 @@ spatial.ppp.mcmc <- function(s,S,priors,start,tune,adapt=TRUE,n.mcmc=1000){
 			keep.tmp <- lapply(keep.tmp,function(x) x*0)
 	   	} 	
 
+
 		###
 		### Update beta
 		### 
 		
 		beta.star <- rnorm(qX,beta,tune$beta)  # proposal for beta
 		int.star <- log(sum(exp(X%*%beta.star)))  # normalized constant in ppp likelihood
-  		mh.0 <- sum(X.used%*%beta-int)+sum(dnorm(beta,mu.beta,sigma.beta,log=TRUE))
-		mh.star <- sum(X.used%*%beta.star-int.star)+sum(dnorm(beta.star,mu.beta,sigma.beta,log=TRUE))
+  		mh.0 <- sum(X.used%*%beta-int)+
+  			sum(dnorm(beta,mu.beta,sigma.beta,log=TRUE))
+		mh.star <- sum(X.used%*%beta.star-int.star)+
+			sum(dnorm(beta.star,mu.beta,sigma.beta,log=TRUE))
 		if(exp(mh.star-mh.0)>runif(1)){
 			beta <- beta.star
 			int <- int.star
 			keep$beta <- keep$beta+1
 			keep.tmp$beta <- keep.tmp$beta+1
 		}
+
 
 		###
 		###  Save samples 
@@ -118,6 +124,7 @@ spatial.ppp.mcmc <- function(s,S,priors,start,tune,adapt=TRUE,n.mcmc=1000){
 	
 	keep$beta <- keep$beta/n.mcmc
 	cat(paste("\nbeta acceptance rate:",round(keep$beta,2))) 
+
 
 	###
 	### Write output
